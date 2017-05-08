@@ -26,5 +26,13 @@ app.use("/update", routes);
 app.use("/create", routes);
 
 // listen on port 3000
-var port = process.env.PORT || 3000;
-app.listen(port);
+var PORT = process.env.PORT || 3000;
+
+var db = require("./models");
+
+// Syncing our sequelize models and then starting our express app
+db.sequelize.sync({ force: true }).then(function() {
+  app.listen(PORT, function() {
+    console.log("App listening on PORT " + PORT);
+  });
+});
