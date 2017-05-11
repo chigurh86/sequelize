@@ -16,8 +16,8 @@ router.get("/burgers", function (req, res) {
 });
 router.post("/burgers/create", function (req, res) {
     db.burger.create(req.body).then(function (result) {
-        res.json(result);
         res.redirect("/");
+
     });
 });
 
@@ -27,7 +27,7 @@ router.put("/burgers/update", function (req, res) {
         devoured: true
     }, {
         where: {
-            id: req.params.id
+            id: req.body.burger_id
         }
     }).then(function (result) {
 
