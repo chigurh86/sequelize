@@ -4,37 +4,36 @@ var router = express.Router();
 var db = require("../models");
 
 // get route -> index
-router.get("/", function(req, res) {
-  res.redirect("/burgers");
+router.get("/", function (req, res) {
+    res.redirect("/burgers");
 });
 
-router.get("/burgers", function(req, res) {
-  // express callback response by calling burger.selectAllBurger
-  db.burger.findAll({}).then(function(data) {
-    // Wrapping the array of returned burgers in a object so it can be referenced inside our handlebars
-    var hbsObject = { burgers: data };
-    res.render("index", hbsObject);
-  });
+router.get("/burgers", function (req, res) {
+    db.burger.findAll({}).then(function (data) {
+        var hbsObject = {burgers: data};
+        res.render("index", hbsObject);
+    });
+});
+router.post("/burgers/create", function (req, res) {
+    db.burger.create(req.body).then(function (result) {
+        res.json(result);
+        res.redirect("/");
+    });
 });
 
-// post route -> back to index
-router.post("/burgers/create", function(req, res) {
-  // takes the request object using it as input for buger.addBurger
-  db.burger.create(req.body).then(function(result) {
-    // wrapper for orm.js that using MySQL insert callback will return a log to console,
-    // render back to index with handle
-    res.json(result);
-  });
-});
 
-// put route -> back to index
-router.put("/burgers/update", function(req, res) {
-  burger.update(req.body.burger_id, function(result) {
-    // wrapper for orm.js that using MySQL update callback will return a log to console,
-    // render back to index with handle
-    console.log(result);
-    res.redirect("/");
-  });
+router.put("/burgers/update", function (req, res) {
+    db.burger.update({
+        devoured: true
+    }, {
+        where: {
+            id: req.params.id
+        }
+    }).then(function (result) {
+
+
+        res.redirect("/");
+    });
 });
 
 module.exports = router;
